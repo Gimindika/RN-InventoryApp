@@ -3,6 +3,7 @@ import { StyleProp, TextInput, TextInputProps, TextStyle, View, ViewStyle } from
 import { color, spacing, typography } from "../../theme"
 import { translate, TxKeyPath } from "../../i18n"
 import { Text } from "../text/text"
+import { DROP_SHADOW } from "../../styles"
 
 // the base styling for the container
 const CONTAINER: ViewStyle = {
@@ -11,11 +12,15 @@ const CONTAINER: ViewStyle = {
 
 // the base styling for the TextInput
 const INPUT: TextStyle = {
+  // ...DROP_SHADOW,
+
   fontFamily: typography.primary,
-  color: color.text,
+  color: color.palette.black,
   minHeight: 44,
   fontSize: 18,
   backgroundColor: color.palette.white,
+  borderRadius: 10,
+  paddingHorizontal: spacing[4],
 }
 
 // currently we have no presets, but that changes quickly when you build your app.
