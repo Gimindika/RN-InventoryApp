@@ -6,8 +6,8 @@ import { SafeAreaView } from "react-native-safe-area-context"
 import CaretIcon from "../../../assets/images/icons/Caret.png"
 import FilterIcon from "../../../assets/images/icons/Filter.png"
 import { GradientBackground, Text, TextField } from "../../components"
-import { getAllCategories, getAllItems } from "../../controllers"
-import { ICategory } from "../../models/interfaces"
+import { getAllCategories, getAllItems, getItemsByCategory } from "../../controllers"
+import { ICategory, IItem } from "../../models/interfaces"
 import { NavigatorParamList } from "../../navigators"
 import { FULL, TEXT } from "../../styles"
 import { color, spacing } from "../../theme"
@@ -23,7 +23,6 @@ import {
   TOP_SECTION_CONTAINER,
 } from "./home-screen.styles"
 import { ProductListItem } from "./product-list-item"
-  justifyContent: "space-between",
 
 interface CategoryPickerProps {
   visible: boolean
@@ -162,6 +161,24 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = o
       fetchCategories()
       fetchItems()
     }, [])
+
+    useEffect(() => {
+      const fetchItemsByCategory = async (selectedCategory: ICategory) => {
+        try {
+          let fetchedItems: IItem[] = []
+          if (selectedCategory.id !== "0") {
+            fetchedItems = await getItemsByCategory(selectedCategory.id)
+          } else {
+            fetchedItems = await getAllItems()
+          }
+          setItems(fetchedItems)
+        } catch (error) {
+          console.log("Fail to fetch Items ", error)
+        }
+      }
+
+      fetchItemsByCategory(selectedCategory)
+    }, [selectedCategory])
 
     const toggleShowCategories = () => {
       setShowCategories(!showCategories)
