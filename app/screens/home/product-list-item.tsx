@@ -5,7 +5,7 @@ import { TEXT } from "../../styles"
 import { color, spacing } from "../../theme"
 
 interface ProductListItemProps {
-  id: number
+  id: string
   name: string
   category: string
   quantity: number
