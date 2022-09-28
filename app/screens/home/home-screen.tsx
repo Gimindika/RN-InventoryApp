@@ -1,16 +1,18 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
-import { ActivityIndicator, FlatList, Image, Modal, TouchableOpacity, View } from "react-native"
+import { ActivityIndicator, FlatList, Image, TouchableOpacity, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import CaretIcon from "../../../assets/images/icons/Caret.png"
 import FilterIcon from "../../../assets/images/icons/Filter.png"
 import { GradientBackground, Text, TextField } from "../../components"
-import { getAllCategories, getAllItems, getItemsByCategory } from "../../controllers"
+import { getAllItems, getItemsByCategory, getItemsByName } from "../../controllers"
+import { useCategories } from "../../hooks"
 import { ICategory, IItem } from "../../models/interfaces"
 import { NavigatorParamList } from "../../navigators"
-import { FULL, TEXT } from "../../styles"
-import { color, spacing } from "../../theme"
+import { FULL } from "../../styles"
+import { color } from "../../theme"
+import CategoryPicker from "./category-picker"
 import {
   FILTER_BUTTON,
   FILTER_WRAPPER,
@@ -24,67 +26,36 @@ import {
 } from "./home-screen.styles"
 import { ProductListItem } from "./product-list-item"
 
-interface CategoryPickerProps {
-  visible: boolean
-  toggleShowCategories: () => void
-  selectCategory: (category: ICategory) => void
-  categories: ICategory[]
-}
-
-const CategoryPicker: FC<CategoryPickerProps> = ({
-  visible,
-  toggleShowCategories,
-  selectCategory,
-  categories,
-}: CategoryPickerProps) => {
-  return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={visible}
-      onRequestClose={toggleShowCategories}
-    >
-      <View
-        style={{
-          backgroundColor: color.palette.white,
-          alignItems: "center",
-          justifyContent: "center",
-          alignSelf: "center",
-          height: "50%",
-          width: "80%",
-          borderColor: color.palette.primary,
-          borderRadius: 10,
-          borderWidth: 1,
-        }}
-      >
-        {categories.map((category) => {
-          return (
-            <TouchableOpacity
-              key={category.id}
-              style={{ marginVertical: spacing[2] }}
-              onPress={() => {
-                selectCategory(category)
-                toggleShowCategories()
-              }}
-            >
-              <Text style={TEXT}> {category.name}</Text>
-            </TouchableOpacity>
-          )
-        })}
-      </View>
-    </Modal>
-  )
-}
-
 interface TopSectionProps {
   toggleShowCategories: () => void
   selectedCategory: ICategory
+  searchText: string
+  setSearchText: (text: string) => void
+  setItems: (items: IItem[]) => void
 }
 
 const TopSection: FC<TopSectionProps> = ({
   selectedCategory,
   toggleShowCategories,
+  searchText,
+  setSearchText,
+  setItems,
 }: TopSectionProps) => {
+  // Search function, REFACTOR LATER
+  const searchItems = async (text: string) => {
+    try {
+      let fetchedItems: IItem[] = []
+      if (text.length > 2) {
+        fetchedItems = await getItemsByName(text)
+      } else if (text === "") {
+        fetchedItems = await getAllItems()
+      }
+      setItems(fetchedItems)
+    } catch (error) {
+      console.log("Fail to fetch Items ", error)
+    }
+  }
+
   return (
     <View style={TOP_SECTION_CONTAINER}>
       <View style={HEADER_WRAPPER}>
@@ -92,7 +63,15 @@ const TopSection: FC<TopSectionProps> = ({
         <Text style={HEADER_TEXT}>16/Sep/2022</Text>
       </View>
 
-      <TextField placeholder="Cari..." />
+      {/* search item  */}
+      <TextField
+        placeholder="Cari..."
+        value={searchText}
+        onChangeText={(text) => {
+          setSearchText(text)
+          searchItems(text)
+        }}
+      />
 
       <View style={FILTER_WRAPPER}>
         {/* {Picker start} */}
@@ -120,11 +99,9 @@ const Spinner = () => (
 
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = observer(
   ({ navigation }) => {
-    // custom hooks for fetch
-    // call fetchCategories() inside CDM useEffect
-    // const [categories, fetchCategories] = useCategories()
+    const [categories, fetchCategories] = useCategories()
 
-    const [categories, setCategories] = useState([])
+    const [searchText, setSearchText] = useState("")
     const [items, setItems] = useState([])
     const [showCategories, setShowCategories] = useState(false)
     const [selectedCategory, setSelectedCategory] = useState({
@@ -142,43 +119,23 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = o
         }
       }
 
-      const fetchCategories = async () => {
-        try {
-          const fetchedCategories = await getAllCategories()
-          if (fetchedCategories)
-            setCategories([
-              {
-                id: "0",
-                name: "semua",
-              },
-              ...fetchedCategories,
-            ])
-        } catch (error) {
-          console.log("Fail to fetch Categories ", error)
-        }
-      }
-
       fetchCategories()
       fetchItems()
     }, [])
 
-    useEffect(() => {
-      const fetchItemsByCategory = async (selectedCategory: ICategory) => {
-        try {
-          let fetchedItems: IItem[] = []
-          if (selectedCategory.id !== "0") {
-            fetchedItems = await getItemsByCategory(selectedCategory.id)
-          } else {
-            fetchedItems = await getAllItems()
-          }
-          setItems(fetchedItems)
-        } catch (error) {
-          console.log("Fail to fetch Items ", error)
+    const fetchItemsByCategory = async (selectedCategory: ICategory) => {
+      try {
+        let fetchedItems: IItem[] = []
+        if (selectedCategory.id !== "0") {
+          fetchedItems = await getItemsByCategory(selectedCategory.id)
+        } else {
+          fetchedItems = await getAllItems()
         }
+        setItems(fetchedItems)
+      } catch (error) {
+        console.log("Fail to fetch Items ", error)
       }
-
-      fetchItemsByCategory(selectedCategory)
-    }, [selectedCategory])
+    }
 
     const toggleShowCategories = () => {
       setShowCategories(!showCategories)
@@ -186,6 +143,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = o
 
     const selectCategory = (category: ICategory) => {
       setSelectedCategory(category)
+      fetchItemsByCategory(category)
     }
 
     return (
@@ -208,6 +166,9 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = o
             <TopSection
               selectedCategory={selectedCategory}
               toggleShowCategories={toggleShowCategories}
+              searchText={searchText}
+              setSearchText={setSearchText}
+              setItems={setItems}
             />
           }
           ListEmptyComponent={Spinner}

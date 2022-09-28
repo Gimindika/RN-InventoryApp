@@ -84,8 +84,11 @@ export const getItemsByUnit = (id: string) => {
   return dummyItem.filter((i) => i.unit.id === id)
 }
 
-export const searchItems = (searchText: string) => {
-  return dummyItem.filter((item) => item.name.indexOf(searchText))
+export const getItemsByName = (searchText: string): IItem[] => {
+  const filteredItems = dummyItem.filter(
+    (item) => item.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1,
+  )
+  return filteredItems
 }
 
 export const insertItem = (item: IItem) => {
