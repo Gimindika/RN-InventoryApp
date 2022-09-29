@@ -40,7 +40,7 @@ const AppStack = () => {
       }}
       initialRouteName="home"
     >
-      <Stack.Screen name="drawer" component={Drawer} options={{ headerShown: false }} />
+      <Stack.Screen name="drawer" component={Drawer} />
       {/* <Stack.Screen name="home" component={HomeScreen} /> */}
       {/* <Stack.Screen name="itemDetail" component={ItemDetailScreen} /> */}
       {/** 🔥 Your screens go here */}

@@ -68,3 +68,8 @@ export const ICON_IMAGE: ImageStyle = {
   width: 25,
   height: 25,
 }
+
+export const HAMBURGER_MENU: ImageStyle = {
+  ...ICON_IMAGE,
+  marginRight:spacing[3]
+}

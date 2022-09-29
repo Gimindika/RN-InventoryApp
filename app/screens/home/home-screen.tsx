@@ -1,3 +1,4 @@
+import { DrawerActions } from "@react-navigation/native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
@@ -5,6 +6,7 @@ import { ActivityIndicator, FlatList, Image, TouchableOpacity, View } from "reac
 import { SafeAreaView } from "react-native-safe-area-context"
 import CaretIcon from "../../../assets/images/icons/Caret.png"
 import FilterIcon from "../../../assets/images/icons/Filter.png"
+import HamburgerIcon from "../../../assets/images/icons/Hamburger.png"
 import { GradientBackground, Text, TextField } from "../../components"
 import { useCategories, useItems } from "../../hooks"
 import { ICategory } from "../../models/interfaces"
@@ -18,6 +20,7 @@ import {
   HEADER_TEXT,
   HEADER_WRAPPER,
   ICON_IMAGE,
+  HAMBURGER_MENU,
   PRODUCT_LIST_CONTAINER,
   SLIDER_CONTAINER,
   SLIDER_TEXT,
@@ -31,6 +34,7 @@ interface TopSectionProps {
   searchText: string
   setSearchText: (text: string) => void
   searchItems: (text: string) => void
+  openDrawer: () => void
 }
 
 const TopSection: FC<TopSectionProps> = ({
@@ -39,11 +43,17 @@ const TopSection: FC<TopSectionProps> = ({
   searchText,
   setSearchText,
   searchItems,
+  openDrawer,
 }: TopSectionProps) => {
   return (
     <View style={TOP_SECTION_CONTAINER}>
       <View style={HEADER_WRAPPER}>
-        <Text style={HEADER_TEXT}>Mang Jarwo</Text>
+        <View style={{ flexDirection: "row" }}>
+          <TouchableOpacity onPress={openDrawer}>
+            <Image style={HAMBURGER_MENU} source={HamburgerIcon} />
+          </TouchableOpacity>
+          <Text style={HEADER_TEXT}>Mang Jarwo</Text>
+        </View>
         <Text style={HEADER_TEXT}>16/Sep/2022</Text>
       </View>
 
@@ -81,7 +91,7 @@ const Spinner = () => (
   </View>
 )
 
-export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = observer(
+export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = observer(
   ({ navigation }) => {
     const [categories, fetchCategories] = useCategories()
     const { items, fetchItems, fetchItemsByCategory, searchItems } = useItems()
@@ -107,6 +117,10 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = o
       fetchItemsByCategory(category)
     }
 
+    const openDrawer = () => {
+      navigation.dispatch(DrawerActions.openDrawer())
+    }
+
     return (
       <SafeAreaView testID="HomeScreen" style={FULL}>
         <GradientBackground colors={[color.palette.primary, color.palette.white]} />
@@ -130,6 +144,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = o
               searchText={searchText}
               setSearchText={setSearchText}
               searchItems={searchItems}
+              openDrawer={openDrawer}
             />
           }
           ListEmptyComponent={Spinner}
