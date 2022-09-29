@@ -6,9 +6,8 @@ import { SafeAreaView } from "react-native-safe-area-context"
 import CaretIcon from "../../../assets/images/icons/Caret.png"
 import FilterIcon from "../../../assets/images/icons/Filter.png"
 import { GradientBackground, Text, TextField } from "../../components"
-import { getAllItems, getItemsByCategory, getItemsByName } from "../../controllers"
-import { useCategories } from "../../hooks"
-import { ICategory, IItem } from "../../models/interfaces"
+import { useCategories, useItems } from "../../hooks"
+import { ICategory } from "../../models/interfaces"
 import { NavigatorParamList } from "../../navigators"
 import { FULL } from "../../styles"
 import { color } from "../../theme"
@@ -31,7 +30,7 @@ interface TopSectionProps {
   selectedCategory: ICategory
   searchText: string
   setSearchText: (text: string) => void
-  setItems: (items: IItem[]) => void
+  searchItems: (text: string) => void
 }
 
 const TopSection: FC<TopSectionProps> = ({
@@ -39,23 +38,8 @@ const TopSection: FC<TopSectionProps> = ({
   toggleShowCategories,
   searchText,
   setSearchText,
-  setItems,
+  searchItems,
 }: TopSectionProps) => {
-  // Search function, REFACTOR LATER
-  const searchItems = async (text: string) => {
-    try {
-      let fetchedItems: IItem[] = []
-      if (text.length > 2) {
-        fetchedItems = await getItemsByName(text)
-      } else if (text === "") {
-        fetchedItems = await getAllItems()
-      }
-      setItems(fetchedItems)
-    } catch (error) {
-      console.log("Fail to fetch Items ", error)
-    }
-  }
-
   return (
     <View style={TOP_SECTION_CONTAINER}>
       <View style={HEADER_WRAPPER}>
@@ -100,9 +84,9 @@ const Spinner = () => (
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = observer(
   ({ navigation }) => {
     const [categories, fetchCategories] = useCategories()
+    const { items, fetchItems, fetchItemsByCategory, searchItems } = useItems()
 
     const [searchText, setSearchText] = useState("")
-    const [items, setItems] = useState([])
     const [showCategories, setShowCategories] = useState(false)
     const [selectedCategory, setSelectedCategory] = useState({
       id: "0",
@@ -110,32 +94,9 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = o
     })
 
     useEffect(() => {
-      const fetchItems = async () => {
-        try {
-          const fetchedItems = await getAllItems()
-          if (fetchedItems) setItems(fetchedItems)
-        } catch (error) {
-          console.log("Fail to fetch Items ", error)
-        }
-      }
-
       fetchCategories()
       fetchItems()
     }, [])
-
-    const fetchItemsByCategory = async (selectedCategory: ICategory) => {
-      try {
-        let fetchedItems: IItem[] = []
-        if (selectedCategory.id !== "0") {
-          fetchedItems = await getItemsByCategory(selectedCategory.id)
-        } else {
-          fetchedItems = await getAllItems()
-        }
-        setItems(fetchedItems)
-      } catch (error) {
-        console.log("Fail to fetch Items ", error)
-      }
-    }
 
     const toggleShowCategories = () => {
       setShowCategories(!showCategories)
@@ -168,7 +129,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = o
               toggleShowCategories={toggleShowCategories}
               searchText={searchText}
               setSearchText={setSearchText}
-              setItems={setItems}
+              searchItems={searchItems}
             />
           }
           ListEmptyComponent={Spinner}
