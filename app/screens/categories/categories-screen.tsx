@@ -1,20 +1,10 @@
-import { DrawerActions } from "@react-navigation/native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
-import {
-  ActivityIndicator,
-  FlatList,
-  Image,
-  ImageStyle,
-  TextStyle,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from "react-native"
+import { ActivityIndicator, FlatList, TouchableOpacity, View, ViewStyle } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
-import HamburgerIcon from "../../../assets/images/icons/Hamburger.png"
 import { Button, GradientBackground, Text } from "../../components"
+import { BurgerHeader } from "../../components/burger-header/burger-header"
 import { useCategories } from "../../hooks"
 import { NavigatorParamList } from "../../navigators"
 import { FULL, TEXT } from "../../styles"
@@ -35,41 +25,13 @@ const CATEGORY_ITEM: ViewStyle = {
   borderRadius: 10,
 }
 
-const ICON_IMAGE: ImageStyle = {
-  width: 25,
-  height: 25,
-}
-
-const HAMBURGER_MENU: ImageStyle = {
-  ...ICON_IMAGE,
-  marginRight: spacing[3],
-}
-
-const HEADER_TEXT: TextStyle = {
-  ...TEXT,
-  fontSize: 20,
-}
-
-const HEADER_WRAPPER: ViewStyle = {
-  flexDirection: "row",
-  alignItems: "center",
-  alignSelf: "center",
-  justifyContent: "space-between",
-  width: "100%",
-}
-
-const TOP_SECTION_CONTAINER: ViewStyle = {
-  paddingHorizontal: spacing[4],
-  paddingVertical: spacing[4],
-}
-
 const Spinner = () => (
   <View style={{ flex: 1, justifyContent: "center" }}>
     <ActivityIndicator size="large" color={color.palette.primary} />
   </View>
 )
 
-export const CategoriesScreen: FC<StackScreenProps<NavigatorParamList, "home">> = observer(
+export const CategoriesScreen: FC<StackScreenProps<NavigatorParamList, "categories">> = observer(
   ({ navigation }) => {
     const [categories, fetchCategories] = useCategories()
 
@@ -77,40 +39,27 @@ export const CategoriesScreen: FC<StackScreenProps<NavigatorParamList, "home">> 
       fetchCategories()
     }, [])
 
-    const openDrawer = () => {
-      navigation.dispatch(DrawerActions.openDrawer())
-    }
-
     return (
       <SafeAreaView testID="HomeScreen" style={FULL}>
-        <GradientBackground colors={[color.palette.white, color.palette.white]} />
-        <View style={TOP_SECTION_CONTAINER}>
-          <View style={HEADER_WRAPPER}>
-            <View style={{ flexDirection: "row" }}>
-              <TouchableOpacity onPress={openDrawer}>
-                <Image style={HAMBURGER_MENU} source={HamburgerIcon} />
-              </TouchableOpacity>
-              <Text style={HEADER_TEXT}>Categories</Text>
-            </View>
-          </View>
-        </View>
+        <GradientBackground colors={[color.palette.primary, color.palette.primary]} />
+
+        <BurgerHeader title="Categories" />
         <FlatList
           contentContainerStyle={CATEGORY_LIST_CONTAINER}
           scrollEnabled={true}
           data={categories}
           renderItem={({ item }) => (
-            <View key={item.id} style={CATEGORY_ITEM}>
+            <TouchableOpacity key={item.id} style={CATEGORY_ITEM}>
               <Text style={TEXT}>{item.name}</Text>
-            </View>
+            </TouchableOpacity>
           )}
           ListEmptyComponent={Spinner}
         />
-        <SafeAreaView
+        <View
           style={{
             height: 100,
-            backgroundColor: color.palette.white,
+            backgroundColor: color.palette.primary,
             justifyContent: "center",
-            alignItems: "center",
           }}
         >
           <Button
@@ -119,11 +68,11 @@ export const CategoriesScreen: FC<StackScreenProps<NavigatorParamList, "home">> 
               height: 50,
               width: "50%",
               alignSelf: "center",
-              backgroundColor: color.palette.primary,
+              backgroundColor: color.palette.white,
             }}
-            textStyle={{ fontSize: 20 }}
+            textStyle={{ fontSize: 20, color: color.palette.primary }}
           />
-        </SafeAreaView>
+        </View>
       </SafeAreaView>
     )
   },

@@ -1,11 +1,5 @@
 import { ImageStyle, TextStyle, ViewStyle } from "react-native"
-import { TEXT } from "../../styles"
 import { color, spacing } from "../../theme"
-
-export const HEADER_TEXT: TextStyle = {
-  ...TEXT,
-  fontSize: 20,
-}
 
 export const HEADER_WRAPPER: ViewStyle = {
   flexDirection: "row",
@@ -56,20 +50,7 @@ export const PRODUCT_LIST_CONTAINER: ViewStyle = {
   flexGrow: 1,
 }
 
-export const TOP_SECTION_CONTAINER: ViewStyle = {
-  paddingHorizontal: spacing[4],
-  paddingVertical: spacing[4],
-  backgroundColor: color.palette.primary,
-  borderBottomLeftRadius: 10,
-  borderBottomRightRadius: 10,
-}
-
 export const ICON_IMAGE: ImageStyle = {
   width: 25,
   height: 25,
-}
-
-export const HAMBURGER_MENU: ImageStyle = {
-  ...ICON_IMAGE,
-  marginRight:spacing[3]
 }

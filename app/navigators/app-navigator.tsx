@@ -26,6 +26,7 @@ import { MyDrawer as Drawer } from "./drawer-navigator"
 export type NavigatorParamList = {
   home: undefined
   drawer: undefined
+  categories: undefined
   // 🔥 Your screens go here
 }
 

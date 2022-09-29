@@ -17,38 +17,6 @@ let dummyCategories: ICategory[] = [
     id: "4",
     name: "air mineral",
   },
-  {
-    id: "5",
-    name: "beras2",
-  },
-  {
-    id: "6",
-    name: "minyak2",
-  },
-  {
-    id: "7",
-    name: "mie instan2",
-  },
-  {
-    id: "8",
-    name: "air mineral2",
-  },
-  {
-    id: "9",
-    name: "beras22",
-  },
-  {
-    id: "10",
-    name: "minyak22",
-  },
-  {
-    id: "11",
-    name: "mie instan22",
-  },
-  {
-    id: "12",
-    name: "air mineral22",
-  },
 ]
 
 export const getAllCategories = () => {
