@@ -8,7 +8,6 @@ import React from "react"
 import { useColorScheme } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { HomeScreen } from "../screens"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 import { MyDrawer as Drawer } from "./drawer-navigator"
 /**
@@ -27,6 +26,7 @@ export type NavigatorParamList = {
   home: undefined
   drawer: undefined
   categories: undefined
+  units: undefined
   // 🔥 Your screens go here
 }
 
@@ -42,7 +42,6 @@ const AppStack = () => {
       initialRouteName="home"
     >
       <Stack.Screen name="drawer" component={Drawer} />
-      {/* <Stack.Screen name="home" component={HomeScreen} /> */}
       {/* <Stack.Screen name="itemDetail" component={ItemDetailScreen} /> */}
       {/** 🔥 Your screens go here */}
     </Stack.Navigator>

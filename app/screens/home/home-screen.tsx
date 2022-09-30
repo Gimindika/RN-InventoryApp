@@ -4,7 +4,6 @@ import React, { FC, useEffect, useState } from "react"
 import { ActivityIndicator, FlatList, Image, TouchableOpacity, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import CaretIcon from "../../../assets/images/icons/Caret.png"
-import FilterIcon from "../../../assets/images/icons/Filter.png"
 import { GradientBackground, Text, TextField } from "../../components"
 import { BurgerHeader } from "../../components/burger-header/burger-header"
 import { useCategories, useItems } from "../../hooks"
@@ -14,12 +13,11 @@ import { FULL } from "../../styles"
 import { color, spacing } from "../../theme"
 import CategoryPicker from "./category-picker"
 import {
-  FILTER_BUTTON,
-  FILTER_WRAPPER,
+  HEADER_WRAPPER,
   ICON_IMAGE,
   PRODUCT_LIST_CONTAINER,
   SLIDER_CONTAINER,
-  SLIDER_TEXT,
+  SLIDER_TEXT
 } from "./home-screen.styles"
 import { ProductListItem } from "./product-list-item"
 
@@ -59,19 +57,26 @@ const TopSection: FC<TopSectionProps> = ({
           }}
         />
 
-        <View style={FILTER_WRAPPER}>
+        <View style={HEADER_WRAPPER}>
           {/* {Picker start} */}
-          <TouchableOpacity style={SLIDER_CONTAINER} onPress={toggleShowCategories}>
-            <Text style={SLIDER_TEXT} text={selectedCategory.name} />
-            <Image style={ICON_IMAGE} source={CaretIcon} />
-          </TouchableOpacity>
+          <View style={{ flex: 1, marginRight: spacing[4] }}>
+            <Text preset="fieldLabel" text={"Category"} style={{ marginBottom: spacing[1] }} />
+            <TouchableOpacity style={SLIDER_CONTAINER} onPress={toggleShowCategories}>
+              <Text style={SLIDER_TEXT} text={selectedCategory.name} />
+              <Image style={ICON_IMAGE} source={CaretIcon} />
+            </TouchableOpacity>
+          </View>
           {/* Picker end */}
 
-          {/* Filter button */}
-          <TouchableOpacity style={FILTER_BUTTON}>
-            <Image style={ICON_IMAGE} source={FilterIcon} />
-          </TouchableOpacity>
-          {/* end of filter button */}
+          {/* {Picker start} */}
+          <View style={{ flex: 1 }}>
+            <Text preset="fieldLabel" text={"Unit"} style={{ marginBottom: spacing[1] }} />
+            <TouchableOpacity style={SLIDER_CONTAINER} onPress={toggleShowCategories}>
+              <Text style={SLIDER_TEXT} text={selectedCategory.name} />
+              <Image style={ICON_IMAGE} source={CaretIcon} />
+            </TouchableOpacity>
+          </View>
+          {/* Picker end */}
         </View>
       </View>
     </View>

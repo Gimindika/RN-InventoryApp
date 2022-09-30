@@ -1,6 +1,6 @@
 import { createDrawerNavigator } from "@react-navigation/drawer"
 import React from "react"
-import { HomeScreen, CategoriesScreen } from "../screens"
+import { HomeScreen, CategoriesScreen, UnitsScreen } from "../screens"
 
 const Drawer = createDrawerNavigator()
 
@@ -13,6 +13,7 @@ export function MyDrawer() {
         component={CategoriesScreen}
         options={{ headerShown: false }}
       />
+      <Drawer.Screen name="units" component={UnitsScreen} options={{ headerShown: false }} />
     </Drawer.Navigator>
   )
 }

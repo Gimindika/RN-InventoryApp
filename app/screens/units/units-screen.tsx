@@ -5,18 +5,18 @@ import { ActivityIndicator, FlatList, TouchableOpacity, View, ViewStyle } from "
 import { SafeAreaView } from "react-native-safe-area-context"
 import { Button, GradientBackground, Text } from "../../components"
 import { BurgerHeader } from "../../components/burger-header/burger-header"
-import { useCategories } from "../../hooks"
+import { useUnits } from "../../hooks"
 import { NavigatorParamList } from "../../navigators"
 import { FULL, TEXT } from "../../styles"
 import { color, spacing } from "../../theme"
 
-const CATEGORY_LIST_CONTAINER: ViewStyle = {
+const UNITS_LIST_CONTAINER: ViewStyle = {
   backgroundColor: color.palette.white,
   width: "100%",
   flexGrow: 1,
 }
 
-const CATEGORY_ITEM: ViewStyle = {
+const UNIT_ITEM: ViewStyle = {
   padding: spacing[3],
   marginVertical: spacing[2],
   marginHorizontal: spacing[4],
@@ -32,27 +32,27 @@ const Spinner = () => (
   </View>
 )
 
-export const CategoriesScreen: FC<StackScreenProps<NavigatorParamList, "categories">> = observer(
+export const UnitsScreen: FC<StackScreenProps<NavigatorParamList, "units">> = observer(
   ({ navigation }) => {
-    const [categories, fetchCategories] = useCategories()
+    const [units, fetchUnits] = useUnits()
 
     useEffect(() => {
-      fetchCategories()
+      fetchUnits()
     }, [])
 
     return (
-      <SafeAreaView testID="CategoriesScreen" style={FULL}>
+      <SafeAreaView testID="UnitsScreen" style={FULL}>
         <GradientBackground colors={[color.palette.primary, color.palette.primary]} />
 
-        <BurgerHeader title="Categories" />
+        <BurgerHeader title="Units" />
         <FlatList
-          contentContainerStyle={CATEGORY_LIST_CONTAINER}
+          contentContainerStyle={UNITS_LIST_CONTAINER}
           scrollEnabled={true}
-          data={categories}
+          data={units}
           renderItem={({ item }) => {
             if (item.id !== "0") {
               return (
-                <TouchableOpacity key={item.id} style={CATEGORY_ITEM}>
+                <TouchableOpacity key={item.id} style={UNIT_ITEM}>
                   <Text style={{ ...TEXT, textAlign: "center" }}>{item.name}</Text>
                 </TouchableOpacity>
               )
