@@ -1,9 +1,9 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
-import { ActivityIndicator, FlatList, TouchableOpacity, View, ViewStyle } from "react-native"
+import { FlatList, TouchableOpacity, View, ViewStyle } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
-import { Button, GradientBackground, Text } from "../../components"
+import { Button, GradientBackground, Spinner, Text } from "../../components"
 import { BurgerHeader } from "../../components/burger-header/burger-header"
 import { useUnits } from "../../hooks"
 import { NavigatorParamList } from "../../navigators"
@@ -25,12 +25,6 @@ const UNIT_ITEM: ViewStyle = {
   borderRadius: 10,
   flex: 1,
 }
-
-const Spinner = () => (
-  <View style={{ flex: 1, justifyContent: "center" }}>
-    <ActivityIndicator size="large" color={color.palette.primary} />
-  </View>
-)
 
 export const UnitsScreen: FC<StackScreenProps<NavigatorParamList, "units">> = observer(
   ({ navigation }) => {

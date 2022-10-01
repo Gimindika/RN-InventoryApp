@@ -1,103 +1,24 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
-import { ActivityIndicator, FlatList, Image, TouchableOpacity, View } from "react-native"
+import { FlatList } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
-import CaretIcon from "../../../assets/images/icons/Caret.png"
-import { GradientBackground, Text, TextField } from "../../components"
-import { BurgerHeader } from "../../components/burger-header/burger-header"
+import { GradientBackground, Spinner } from "../../components"
 import { useCategories, useItems, useUnits } from "../../hooks"
 import { ICategory, IUnit } from "../../models/interfaces"
 import { NavigatorParamList } from "../../navigators"
 import { FULL } from "../../styles"
-import { color, spacing } from "../../theme"
+import { color } from "../../theme"
 import CategoryPicker from "./category-picker"
-import {
-  HEADER_WRAPPER,
-  ICON_IMAGE,
-  PRODUCT_LIST_CONTAINER,
-  SLIDER_CONTAINER,
-  SLIDER_TEXT,
-} from "./home-screen.styles"
+import { PRODUCT_LIST_CONTAINER } from "./home-screen.styles"
+import { ListHeader } from "./list-header"
 import { ProductListItem } from "./product-list-item"
 import UnitPicker from "./unit-picker"
-
-interface TopSectionProps {
-  toggleShowCategories: () => void
-  selectedCategory: ICategory
-  toggleShowUnits: () => void
-  selectedUnit: IUnit
-  searchText: string
-  setSearchText: (text: string) => void
-  searchItems: (text: string) => void
-}
 
 const FILTER_ITEM_ALL = {
   id: "0",
   name: "semua",
 }
-
-const TopSection: FC<TopSectionProps> = ({
-  selectedCategory,
-  toggleShowCategories,
-  selectedUnit,
-  toggleShowUnits,
-  searchText,
-  setSearchText,
-  searchItems,
-}: TopSectionProps) => {
-  return (
-    <View
-      style={{
-        backgroundColor: color.palette.primary,
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 10,
-      }}
-    >
-      <BurgerHeader title="Mang Jarwo" />
-
-      <View style={{ paddingHorizontal: spacing[4], paddingBottom: spacing[4] }}>
-        {/* search item  */}
-        <TextField
-          placeholder="Cari..."
-          value={searchText}
-          onChangeText={(text) => {
-            setSearchText(text)
-            searchItems(text)
-          }}
-        />
-
-        <View style={HEADER_WRAPPER}>
-          {/* {Picker start} */}
-          <View style={{ flex: 1, marginRight: spacing[4] }}>
-            <Text preset="fieldLabel" text={"Category"} style={{ marginBottom: spacing[1] }} />
-            <TouchableOpacity style={SLIDER_CONTAINER} onPress={toggleShowCategories}>
-              <Text style={SLIDER_TEXT} text={selectedCategory.name} />
-              <Image style={ICON_IMAGE} source={CaretIcon} />
-            </TouchableOpacity>
-          </View>
-          {/* Picker end */}
-
-          {/* {Picker start} */}
-          <View style={{ flex: 1 }}>
-            <Text preset="fieldLabel" text={"Unit"} style={{ marginBottom: spacing[1] }} />
-            <TouchableOpacity style={SLIDER_CONTAINER} onPress={toggleShowUnits}>
-              <Text style={SLIDER_TEXT} text={selectedUnit.name} />
-              <Image style={ICON_IMAGE} source={CaretIcon} />
-            </TouchableOpacity>
-          </View>
-          {/* Picker end */}
-        </View>
-      </View>
-    </View>
-  )
-}
-
-const Spinner = () => (
-  <View style={{ flex: 1, justifyContent: "center" }}>
-    <ActivityIndicator size="large" color={color.palette.primary} />
-  </View>
-)
 
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = observer(
   ({ navigation }) => {
@@ -154,7 +75,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             />
           )}
           ListHeaderComponent={
-            <TopSection
+            <ListHeader
               selectedCategory={selectedCategory}
               toggleShowCategories={toggleShowCategories}
               selectedUnit={selectedUnit}
