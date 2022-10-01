@@ -1,6 +1,6 @@
 import { useState } from "react"
-import { getAllItems, getItemsByCategory, getItemsByName } from "../controllers"
-import { IItem, ICategory } from "../models/interfaces"
+import { getAllItems, getItemsByCategory, getItemsByName, getItemsByUnit } from "../controllers"
+import { IItem, ICategory, IUnit } from "../models/interfaces"
 
 export function useItems() {
   const [items, setItems] = useState([])
@@ -28,6 +28,20 @@ export function useItems() {
     }
   }
 
+  const fetchItemsByUnit = async (selectedUnit: IUnit) => {
+    try {
+      let fetchedItems: IItem[] = []
+      if (selectedUnit.id !== "0") {
+        fetchedItems = await getItemsByUnit(selectedUnit.id)
+      } else {
+        fetchedItems = await getAllItems()
+      }
+      setItems(fetchedItems)
+    } catch (error) {
+      console.log("Fail to fetch Items ", error)
+    }
+  }
+
   const searchItems = async (text: string) => {
     try {
       let fetchedItems: IItem[] = []
@@ -42,5 +56,5 @@ export function useItems() {
     }
   }
 
-  return { items, fetchItems, fetchItemsByCategory, searchItems }
+  return { items, fetchItems, fetchItemsByCategory, fetchItemsByUnit, searchItems }
 }

@@ -6,8 +6,8 @@ import { SafeAreaView } from "react-native-safe-area-context"
 import CaretIcon from "../../../assets/images/icons/Caret.png"
 import { GradientBackground, Text, TextField } from "../../components"
 import { BurgerHeader } from "../../components/burger-header/burger-header"
-import { useCategories, useItems } from "../../hooks"
-import { ICategory } from "../../models/interfaces"
+import { useCategories, useItems, useUnits } from "../../hooks"
+import { ICategory, IUnit } from "../../models/interfaces"
 import { NavigatorParamList } from "../../navigators"
 import { FULL } from "../../styles"
 import { color, spacing } from "../../theme"
@@ -17,21 +17,31 @@ import {
   ICON_IMAGE,
   PRODUCT_LIST_CONTAINER,
   SLIDER_CONTAINER,
-  SLIDER_TEXT
+  SLIDER_TEXT,
 } from "./home-screen.styles"
 import { ProductListItem } from "./product-list-item"
+import UnitPicker from "./unit-picker"
 
 interface TopSectionProps {
   toggleShowCategories: () => void
   selectedCategory: ICategory
+  toggleShowUnits: () => void
+  selectedUnit: IUnit
   searchText: string
   setSearchText: (text: string) => void
   searchItems: (text: string) => void
 }
 
+const FILTER_ITEM_ALL = {
+  id: "0",
+  name: "semua",
+}
+
 const TopSection: FC<TopSectionProps> = ({
   selectedCategory,
   toggleShowCategories,
+  selectedUnit,
+  toggleShowUnits,
   searchText,
   setSearchText,
   searchItems,
@@ -71,8 +81,8 @@ const TopSection: FC<TopSectionProps> = ({
           {/* {Picker start} */}
           <View style={{ flex: 1 }}>
             <Text preset="fieldLabel" text={"Unit"} style={{ marginBottom: spacing[1] }} />
-            <TouchableOpacity style={SLIDER_CONTAINER} onPress={toggleShowCategories}>
-              <Text style={SLIDER_TEXT} text={selectedCategory.name} />
+            <TouchableOpacity style={SLIDER_CONTAINER} onPress={toggleShowUnits}>
+              <Text style={SLIDER_TEXT} text={selectedUnit.name} />
               <Image style={ICON_IMAGE} source={CaretIcon} />
             </TouchableOpacity>
           </View>
@@ -92,18 +102,19 @@ const Spinner = () => (
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = observer(
   ({ navigation }) => {
     const [categories, fetchCategories] = useCategories()
-    const { items, fetchItems, fetchItemsByCategory, searchItems } = useItems()
+    const [units, fetchUnits] = useUnits()
+    const { items, fetchItems, fetchItemsByCategory, fetchItemsByUnit, searchItems } = useItems()
 
     const [searchText, setSearchText] = useState("")
     const [showCategories, setShowCategories] = useState(false)
-    const [selectedCategory, setSelectedCategory] = useState({
-      id: "0",
-      name: "semua",
-    })
+    const [showUnits, setShowUnits] = useState(false)
+    const [selectedCategory, setSelectedCategory] = useState(FILTER_ITEM_ALL)
+    const [selectedUnit, setSelectedUnit] = useState(FILTER_ITEM_ALL)
 
     useEffect(() => {
       fetchCategories()
       fetchItems()
+      fetchUnits()
     }, [])
 
     const toggleShowCategories = () => {
@@ -113,6 +124,17 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     const selectCategory = (category: ICategory) => {
       setSelectedCategory(category)
       fetchItemsByCategory(category)
+      setSelectedUnit(FILTER_ITEM_ALL)
+    }
+
+    const toggleShowUnits = () => {
+      setShowUnits(!showUnits)
+    }
+
+    const selectUnit = (unit: IUnit) => {
+      setSelectedUnit(unit)
+      fetchItemsByUnit(unit)
+      setSelectedCategory(FILTER_ITEM_ALL)
     }
 
     return (
@@ -135,6 +157,8 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             <TopSection
               selectedCategory={selectedCategory}
               toggleShowCategories={toggleShowCategories}
+              selectedUnit={selectedUnit}
+              toggleShowUnits={toggleShowUnits}
               searchText={searchText}
               setSearchText={setSearchText}
               searchItems={searchItems}
@@ -147,6 +171,12 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           categories={categories}
           toggleShowCategories={toggleShowCategories}
           selectCategory={selectCategory}
+        />
+        <UnitPicker
+          visible={showUnits}
+          units={units}
+          toggleShowUnits={toggleShowUnits}
+          selectUnit={selectUnit}
         />
       </SafeAreaView>
     )
