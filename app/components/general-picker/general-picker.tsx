@@ -1,15 +1,15 @@
 import React, { FC } from "react"
 import { Modal, TouchableOpacity, View, ViewStyle } from "react-native"
 import { Text } from "../../components"
-import { IUnit } from "../../models/interfaces"
+import { ICategory, IUnit } from "../../models/interfaces"
 import { TEXT } from "../../styles"
 import { color, spacing } from "../../theme"
 
-interface UnitPickerProps {
+interface PickerProps {
   visible: boolean
-  toggleShowUnits: () => void
-  selectUnit: (unit: IUnit) => void
-  units: IUnit[]
+  toggleShowItems: () => void
+  selectItem: (item: IUnit | ICategory) => void
+  items: IUnit[] | ICategory[]
 }
 
 const CONTAINER: ViewStyle = {
@@ -30,32 +30,27 @@ const OVERLAY: ViewStyle = {
   height: "100%",
 }
 
-const UnitPicker: FC<UnitPickerProps> = ({
-  visible,
-  toggleShowUnits,
-  selectUnit,
-  units,
-}: UnitPickerProps) => {
+export const Picker: FC<PickerProps> = ({ visible, toggleShowItems, selectItem, items }: PickerProps) => {
   return (
     <Modal
       animationType="slide"
       transparent={true}
       visible={visible}
-      onRequestClose={toggleShowUnits}
+      onRequestClose={toggleShowItems}
     >
       <View style={OVERLAY}>
         <View style={CONTAINER}>
-          {units.map((unit) => {
+          {items.map((item) => {
             return (
               <TouchableOpacity
-                key={unit.id}
+                key={item.id}
                 style={{ marginVertical: spacing[2] }}
                 onPress={() => {
-                  selectUnit(unit)
-                  toggleShowUnits()
+                  selectItem(item)
+                  toggleShowItems()
                 }}
               >
-                <Text style={TEXT}> {unit.name}</Text>
+                <Text style={TEXT}> {item.name}</Text>
               </TouchableOpacity>
             )
           })}
@@ -64,5 +59,3 @@ const UnitPicker: FC<UnitPickerProps> = ({
     </Modal>
   )
 }
-
-export default UnitPicker

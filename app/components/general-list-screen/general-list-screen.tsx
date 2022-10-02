@@ -1,7 +1,7 @@
 import React, { FC } from "react"
-import { FlatList, TouchableOpacity, View, ViewStyle } from "react-native"
+import { FlatList, TouchableOpacity, ViewStyle } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
-import { Button, GradientBackground, Spinner, Text } from "../../components"
+import { AddButton, GradientBackground, Spinner, Text } from "../../components"
 import { BurgerHeader } from "../../components/burger-header/burger-header"
 import { ICategory, IUnit } from "../../models/interfaces"
 import { FULL, TEXT } from "../../styles"
@@ -34,7 +34,7 @@ export const GeneralListScreen: FC<GeneralListScreenProps> = (props: GeneralList
 
   return (
     <SafeAreaView testID={testID} style={FULL}>
-      <GradientBackground colors={[color.palette.primary, color.palette.primary]} />
+      <GradientBackground colors={[color.palette.primary, color.palette.white]} />
 
       <BurgerHeader title={title} />
       <FlatList
@@ -53,24 +53,7 @@ export const GeneralListScreen: FC<GeneralListScreenProps> = (props: GeneralList
         ListEmptyComponent={Spinner}
         numColumns={1}
       />
-      <View
-        style={{
-          height: 100,
-          backgroundColor: color.palette.primary,
-          justifyContent: "center",
-        }}
-      >
-        <Button
-          text="Tambah"
-          style={{
-            height: 50,
-            width: "50%",
-            alignSelf: "center",
-            backgroundColor: color.palette.white,
-          }}
-          textStyle={{ fontSize: 20, color: color.palette.primary }}
-        />
-      </View>
+      <AddButton />
     </SafeAreaView>
   )
 }

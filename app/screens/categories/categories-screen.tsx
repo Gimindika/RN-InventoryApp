@@ -1,7 +1,7 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
-import { GeneralListScreen } from "../../components/general-list-screen/general-list-screen"
+import { GeneralListScreen } from "../../components"
 import { useCategories } from "../../hooks"
 import { NavigatorParamList } from "../../navigators"
 

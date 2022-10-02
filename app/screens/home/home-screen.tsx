@@ -3,17 +3,15 @@ import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { FlatList } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
-import { GradientBackground, Spinner } from "../../components"
+import { AddButton, GradientBackground, Picker, Spinner } from "../../components"
 import { useCategories, useItems, useUnits } from "../../hooks"
 import { ICategory, IUnit } from "../../models/interfaces"
 import { NavigatorParamList } from "../../navigators"
 import { FULL } from "../../styles"
 import { color } from "../../theme"
-import CategoryPicker from "./category-picker"
 import { PRODUCT_LIST_CONTAINER } from "./home-screen.styles"
 import { ListHeader } from "./list-header"
 import { ProductListItem } from "./product-list-item"
-import UnitPicker from "./unit-picker"
 
 const FILTER_ITEM_ALL = {
   id: "0",
@@ -87,18 +85,19 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           }
           ListEmptyComponent={Spinner}
         />
-        <CategoryPicker
+        <Picker
           visible={showCategories}
-          categories={categories}
-          toggleShowCategories={toggleShowCategories}
-          selectCategory={selectCategory}
+          items={categories}
+          toggleShowItems={toggleShowCategories}
+          selectItem={selectCategory}
         />
-        <UnitPicker
+        <Picker
           visible={showUnits}
-          units={units}
-          toggleShowUnits={toggleShowUnits}
-          selectUnit={selectUnit}
+          items={units}
+          toggleShowItems={toggleShowUnits}
+          selectItem={selectUnit}
         />
+        <AddButton />
       </SafeAreaView>
     )
   },
