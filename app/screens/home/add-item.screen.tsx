@@ -5,8 +5,8 @@ import { Image, TextStyle, TouchableOpacity, View, ViewStyle } from "react-nativ
 import { SafeAreaView } from "react-native-safe-area-context"
 import CaretIcon from "../../../assets/images/icons/Caret.png"
 import { Button, GradientBackground, PickerModal, Text, TextField } from "../../components"
-import { useCategories, useUnits } from "../../hooks"
-import { ICategory, IUnit } from "../../models/interfaces"
+import { useCategories, useItems, useUnits } from "../../hooks"
+import { ICategory, IItem, IUnit } from "../../models/interfaces"
 import { NavigatorParamList } from "../../navigators"
 import { FULL, TEXT } from "../../styles"
 import { color, spacing } from "../../theme"
@@ -42,10 +42,15 @@ export const AddItemScreen: FC<StackScreenProps<NavigatorParamList, "addItem">> 
     const [categories, fetchCategories] = useCategories()
     const [units, fetchUnits] = useUnits()
 
+    const [itemName, setItemName] = useState("")
+    const [itemQuantity, setItemQuantity] = useState("")
+
     const [showCategories, setShowCategories] = useState(false)
     const [showUnits, setShowUnits] = useState(false)
     const [selectedCategory, setSelectedCategory] = useState(FILTER_ITEM_ALL)
     const [selectedUnit, setSelectedUnit] = useState(FILTER_ITEM_ALL)
+
+    const { addItem: addItemHook } = useItems()
 
     useEffect(() => {
       fetchCategories()
@@ -66,6 +71,37 @@ export const AddItemScreen: FC<StackScreenProps<NavigatorParamList, "addItem">> 
 
     const selectUnit = (unit: IUnit) => {
       setSelectedUnit(unit)
+    }
+
+    const addItem = () => {
+      if (itemName === "") {
+        console.log("ALERT USER ")
+        return
+      }
+      if (itemQuantity === "") {
+        console.log("ALERT USER ")
+        return
+      }
+      if (selectedCategory.id === "0") {
+        console.log("ALERT USER ")
+        return
+      }
+
+      if (selectedUnit.id === "0") {
+        console.log("ALERT USER ")
+        return
+      }
+
+      let item: IItem = {
+        id: "0",
+        name: itemName,
+        quantity: parseInt(itemQuantity),
+        category: selectedCategory,
+        unit: selectedUnit,
+      }
+
+      addItemHook(item)
+      navigation.pop()
     }
 
     return (
@@ -90,8 +126,21 @@ export const AddItemScreen: FC<StackScreenProps<NavigatorParamList, "addItem">> 
                 placeholder="Beras Selancar"
                 label="Nama Item"
                 style={{ width: "75%", marginRight: spacing[4] }}
+                value={itemName}
+                onChangeText={(text) => {
+                  setItemName(text)
+                }}
               />
-              <TextField placeholder="200" style={{ width: "20%" }} label="Quantity" />
+              <TextField
+                placeholder="200"
+                style={{ width: "20%" }}
+                label="Quantity"
+                value={itemQuantity}
+                onChangeText={(text) => {
+                  setItemQuantity(text)
+                }}
+                keyboardType="numeric"
+              />
             </View>
           </View>
           <View style={HEADER_WRAPPER}>
@@ -124,6 +173,7 @@ export const AddItemScreen: FC<StackScreenProps<NavigatorParamList, "addItem">> 
             }}
             textStyle={BUTTON_TEXT}
             text="Tambah"
+            onPress={() => addItem()}
           />
           <Button
             style={BUTTON}

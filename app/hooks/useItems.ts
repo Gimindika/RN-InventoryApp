@@ -1,5 +1,13 @@
 import { useState } from "react"
-import { getAllItems, getItemsByCategory, getItemsByName, getItemsByUnit } from "../controllers"
+import { async } from "validate.js"
+import {
+  getAllItems,
+  getItemsLength,
+  getItemsByCategory,
+  getItemsByName,
+  getItemsByUnit,
+  insertItem,
+} from "../controllers"
 import { IItem, ICategory, IUnit } from "../models/interfaces"
 
 export function useItems() {
@@ -56,5 +64,14 @@ export function useItems() {
     }
   }
 
-  return { items, fetchItems, fetchItemsByCategory, fetchItemsByUnit, searchItems }
+  const addItem = async (item: IItem) => {
+    try {
+      item = { ...item, id: (getItemsLength() + 1).toString() }
+      insertItem(item)
+    } catch (error) {
+      console.log("Fail to add Item ", error)
+    }
+  }
+
+  return { items, fetchItems, addItem, fetchItemsByCategory, fetchItemsByUnit, searchItems }
 }

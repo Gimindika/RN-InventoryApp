@@ -72,6 +72,10 @@ export const getAllItems = () => {
   return dummyItem
 }
 
+export const getItemsLength = () => {
+  return dummyItem.length
+}
+
 export const getItemsById = (id: string) => {
   return dummyItem.find((i) => i.id === id)
 }
@@ -92,6 +96,7 @@ export const getItemsByName = (searchText: string): IItem[] => {
 }
 
 export const insertItem = (item: IItem) => {
+  
   dummyItem.push(item)
   return item
 }
