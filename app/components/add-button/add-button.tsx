@@ -1,9 +1,9 @@
-import React from "react"
+import React, { FC } from "react"
 import { View } from "react-native"
 import { Button } from "../../components"
 import { color } from "../../theme"
 
-export const AddButton = () => {
+export const AddButton: FC<{ onPress: () => void }> = ({ onPress }) => {
   return (
     <View
       style={{
@@ -14,6 +14,7 @@ export const AddButton = () => {
     >
       <Button
         text="Tambah"
+        onPress={onPress}
         style={{
           height: 50,
           width: "50%",

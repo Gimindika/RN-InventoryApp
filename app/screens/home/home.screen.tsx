@@ -3,20 +3,16 @@ import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { FlatList } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
-import { AddButton, GradientBackground, Picker, Spinner } from "../../components"
+import { AddButton, GradientBackground, PickerModal, Spinner } from "../../components"
 import { useCategories, useItems, useUnits } from "../../hooks"
 import { ICategory, IUnit } from "../../models/interfaces"
 import { NavigatorParamList } from "../../navigators"
 import { FULL } from "../../styles"
 import { color } from "../../theme"
-import { PRODUCT_LIST_CONTAINER } from "./home-screen.styles"
+import { FILTER_ITEM_ALL } from "./constants"
+import { PRODUCT_LIST_CONTAINER } from "./home.screen.styles"
 import { ListHeader } from "./list-header"
 import { ProductListItem } from "./product-list-item"
-
-const FILTER_ITEM_ALL = {
-  id: "0",
-  name: "semua",
-}
 
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = observer(
   ({ navigation }) => {
@@ -85,19 +81,19 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           }
           ListEmptyComponent={Spinner}
         />
-        <Picker
+        <PickerModal
           visible={showCategories}
           items={categories}
           toggleShowItems={toggleShowCategories}
           selectItem={selectCategory}
         />
-        <Picker
+        <PickerModal
           visible={showUnits}
           items={units}
           toggleShowItems={toggleShowUnits}
           selectItem={selectUnit}
         />
-        <AddButton />
+        <AddButton onPress={() => navigation.push("addItem")} />
       </SafeAreaView>
     )
   },

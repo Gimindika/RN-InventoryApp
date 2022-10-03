@@ -1,11 +1,11 @@
 import React, { FC } from "react"
 import { Modal, TouchableOpacity, View, ViewStyle } from "react-native"
-import { Text } from "../../components"
+import { Text } from ".."
 import { ICategory, IUnit } from "../../models/interfaces"
 import { TEXT } from "../../styles"
 import { color, spacing } from "../../theme"
 
-interface PickerProps {
+interface PickerModal {
   visible: boolean
   toggleShowItems: () => void
   selectItem: (item: IUnit | ICategory) => void
@@ -30,7 +30,7 @@ const OVERLAY: ViewStyle = {
   height: "100%",
 }
 
-export const Picker: FC<PickerProps> = ({ visible, toggleShowItems, selectItem, items }: PickerProps) => {
+export const PickerModal: FC<PickerModal> = ({ visible, toggleShowItems, selectItem, items }: PickerModal) => {
   return (
     <Modal
       animationType="slide"

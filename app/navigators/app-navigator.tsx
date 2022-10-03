@@ -10,6 +10,7 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 import { MyDrawer as Drawer } from "./drawer-navigator"
+import { AddItemScreen } from "../screens"
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
  * as well as what properties (if any) they might take when navigating to them.
@@ -27,6 +28,7 @@ export type NavigatorParamList = {
   drawer: undefined
   categories: undefined
   units: undefined
+  addItem: undefined
   // 🔥 Your screens go here
 }
 
@@ -42,7 +44,7 @@ const AppStack = () => {
       initialRouteName="home"
     >
       <Stack.Screen name="drawer" component={Drawer} />
-      {/* <Stack.Screen name="itemDetail" component={ItemDetailScreen} /> */}
+      <Stack.Screen name="addItem" component={AddItemScreen} />
       {/** 🔥 Your screens go here */}
     </Stack.Navigator>
   )
