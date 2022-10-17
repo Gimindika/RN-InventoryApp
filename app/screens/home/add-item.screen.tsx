@@ -18,6 +18,7 @@ const CONTAINER: ViewStyle = {
   height: "30%",
   alignItems: "center",
   alignSelf: "center",
+  padding: spacing[4],
 }
 
 const BUTTON_CONTAINER: ViewStyle = {
@@ -30,7 +31,7 @@ const BUTTON_CONTAINER: ViewStyle = {
 
 const BUTTON: ViewStyle = {
   height: 50,
-  width: "50%",
+  width: "45%",
   alignSelf: "center",
   backgroundColor: color.palette.white,
 }
@@ -101,13 +102,14 @@ export const AddItemScreen: FC<StackScreenProps<NavigatorParamList, "addItem">> 
       }
 
       addItemHook(item)
+      // reset state
       navigation.pop()
     }
 
     return (
       <SafeAreaView
         testID="AddItemScreen"
-        style={{ ...FULL, padding: spacing[4], alignItems: "center", justifyContent: "center" }}
+        style={{ ...FULL, alignItems: "center", justifyContent: "center" }}
       >
         <GradientBackground colors={[color.palette.primary, color.palette.white]} />
 
@@ -169,7 +171,7 @@ export const AddItemScreen: FC<StackScreenProps<NavigatorParamList, "addItem">> 
           <Button
             style={{
               ...BUTTON,
-              marginRight: spacing[6],
+              marginRight: spacing[4],
             }}
             textStyle={BUTTON_TEXT}
             text="Tambah"
